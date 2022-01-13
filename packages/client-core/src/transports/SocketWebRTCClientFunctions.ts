@@ -59,19 +59,23 @@ export async function createTransport(direction: string, channelType?: string, c
       channelId: channelId
     })
 
+    console.log('transportOptions', transportOptions)
     if (direction === 'recv') transport = await networkTransport.mediasoupDevice.createRecvTransport(transportOptions)
     else if (direction === 'send')
       transport = await networkTransport.mediasoupDevice.createSendTransport(transportOptions)
     else throw new Error(`bad transport 'direction': ${direction}`)
 
+    console.log(transport)
     // mediasoup-client will emit a connect event when media needs to
     // start flowing for the first time. send dtlsParameters to the
     // server, then call callback() on success or errback() on failure.
     transport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: () => void) => {
+      console.log('\n\n\n\nWebRTCTransportConnect', direction, dtlsParameters, transportOptions, '\n\n\n')
       const connectResult = await request(MessageTypes.WebRTCTransportConnect.toString(), {
         transportId: transportOptions.id,
         dtlsParameters
       })
+      console.log('connectResult', connectResult)
 
       if (connectResult.error) {
         console.log('Transport connect error')
@@ -122,6 +126,7 @@ export async function createTransport(direction: string, channelType?: string, c
             appData
           })
 
+          console.log('produced data', id)
           if (error) {
             console.log(error)
             errback()
@@ -136,6 +141,7 @@ export async function createTransport(direction: string, channelType?: string, c
     // any time a transport transitions to closed,
     // failed, or disconnected, leave the  and reset
     transport.on('connectionstatechange', async (state: string) => {
+      console.log('Transport', transport, ' transitioned to state', state)
       if (networkTransport.leaving !== true && (state === 'closed' || state === 'failed' || state === 'disconnected')) {
         EngineEvents.instance.dispatchEvent({ type: SocketWebRTCClientTransport.EVENTS.INSTANCE_DISCONNECTED })
         console.error('Transport', transport, ' transitioned to state', state)

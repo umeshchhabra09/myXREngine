@@ -39,6 +39,7 @@ export async function startWebRTC(): Promise<void> {
   // Initialize roomstate
   const cores = os.cpus()
   networkTransport.routers = { instance: [] }
+  console.log('mediasoup worker config', localConfig.mediasoup.worker)
   for (let i = 0; i < cores.length; i++) {
     const newWorker = await createWorker({
       logLevel: 'debug',
@@ -463,12 +464,15 @@ export async function handleWebRtcTransportClose(socket, data, callback): Promis
 export async function handleWebRtcTransportConnect(socket, data, callback): Promise<any> {
   const { transportId, dtlsParameters } = data,
     transport = Network.instance.transports[transportId]
+  console.log('connecting dtlsParameters', dtlsParameters)
+  console.log('Transport to connect', transport)
   if (transport != null) {
-    await transport.connect({ dtlsParameters }).catch((err) => {
-      logger.error(err)
+    const connectResult = await transport.connect({ dtlsParameters }).catch((err) => {
+      console.error('handleWebRtcTransportConnect', err, data)
       callback({ connected: false })
       return
     })
+    console.log('transport after connect', transport)
     callback({ connected: true })
   } else callback({ error: 'invalid transport' })
 }
