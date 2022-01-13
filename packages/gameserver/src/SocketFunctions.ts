@@ -30,24 +30,30 @@ import {
 } from './WebRTCFunctions'
 import { SocketWebRTCServerTransport } from './SocketWebRTCServerTransport'
 import { accessEngineState } from '@xrengine/engine/src/ecs/classes/EngineService'
+import { Engine } from '@xrengine/engine/src/ecs/classes/Engine'
 
 function isNullOrUndefined<T>(obj: T | null | undefined): obj is null | undefined {
   return typeof obj === 'undefined' || obj === null
 }
 
 export const setupSocketFunctions = (transport: SocketWebRTCServerTransport) => async (socket: Socket) => {
+  console.log('setupSocketFunctions')
   const app = transport.app
 
+  console.log('joinedWorld', accessEngineState().joinedWorld.value)
   if (!accessEngineState().joinedWorld.value)
     await new Promise<void>((resolve) => {
       const interval = setInterval(() => {
+        console.log('interval joinedWorld', accessEngineState().joinedWorld.value)
         if (accessEngineState().joinedWorld.value) {
+          console.log('clearing interval')
           clearInterval(interval)
           resolve()
         }
       }, 100)
     })
 
+  console.log('creating auth listener')
   // Authorize user and make sure everything is valid before allowing them to join the world
   socket.on(MessageTypes.Authorization.toString(), async (data, callback) => {
     console.log('AUTHORIZATION CALL HANDLER', data.userId)
@@ -108,6 +114,8 @@ export const setupSocketFunctions = (transport: SocketWebRTCServerTransport) => 
     // Return an authorization success message to client
     callback({ success: true })
 
+    console.log('current clients', Engine?.currentWorld?.clients)
+    console.log('creating socket listeners for', data.userId)
     socket.on(MessageTypes.ConnectToWorld.toString(), async (data, callback) => {
       // console.log('Got ConnectToWorld:');
       // console.log(data);
