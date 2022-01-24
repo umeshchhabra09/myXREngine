@@ -1,5 +1,4 @@
 import { Theme } from '@mui/material/styles'
-
 import createStyles from '@mui/styles/createStyles'
 import makeStyles from '@mui/styles/makeStyles'
 
@@ -336,6 +335,57 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       '&:hover': {
         background: '#343b41'
+      }
+    },
+    large: {
+      width: theme.spacing(10),
+      height: theme.spacing(10),
+      [theme.breakpoints.down('lg')]: {
+        width: '80px',
+        height: '80px'
+      }
+    },
+    pad: {
+      padding: '20px'
+    },
+    centering: {
+      justifyContent: 'center'
+    },
+    paperHeight: {
+      height: '20vh',
+      background: '#111',
+      color: '#f1f1f1',
+      backgroundColor: '#343b41',
+      [theme.breakpoints.down('md')]: {
+        height: '15vh'
+      }
+    },
+    mt20: {
+      marginTop: '20%'
+    },
+
+    mt5: {
+      marginTop: '5%',
+      marginLeft: '0px'
+    },
+    divider: {
+      height: 28,
+      margin: 4
+    },
+    selector: {
+      width: '100%'
+    },
+    scopeContainer: {
+      maxHeight: '200px',
+      width: '460px',
+      overflowY: 'scroll',
+      [theme.breakpoints.down('lg')]: {
+        width: '100%'
+      }
+    },
+    typoFontTitle: {
+      [theme.breakpoints.down('md')]: {
+        fontSize: '1.3rem'
       }
     }
   })
