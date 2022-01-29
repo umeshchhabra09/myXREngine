@@ -17,12 +17,12 @@ then
   node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-gameserver --region $REGION
   node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-testbot --region $REGION
 else
-  aws ecr-public get-login-password --region us-east-1 | docker login -u AWS --password-stdin $ECR_URL
-  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-analytics --region us-east-1 --public
-  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-api --region us-east-1 --public
-  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-client --region us-east-1 --public
-  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-gameserver --region us-east-1 --public
-  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-testbot --region us-east-1 --public
+  aws ecr-public get-login-password --region $REGION | docker login -u AWS --password-stdin $ECR_URL
+  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-analytics --region $REGION --public
+  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-api --region $REGION --public
+  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-client --region $REGION --public
+  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-gameserver --region $REGION --public
+  node ./scripts/prune_ecr_images.js --repoName $REPO_NAME-testbot --region $REGION --public
 fi
 
 docker tag $LABEL-analytics $ECR_URL/$REPO_NAME-analytics:$TAG & docker tag $LABEL-analytics $ECR_URL/$REPO_NAME-analytics:latest_$STAGE & \
