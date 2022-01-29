@@ -1,5 +1,4 @@
 # values for nginx-ingress on EKS using Classic ALP
-
 rbac:
   create: true
 
