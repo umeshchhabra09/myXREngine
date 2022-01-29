@@ -13,8 +13,8 @@ data:
   mapUsers: |
     - groups:
       - system:masters
-      userarn: arn:aws:iam::<account_id>:user/<IAM_username>
-      username: <IAM_username>
+      userarn: arn:aws:iam::376249154247:user/deploy
+      username: deploy
 kind: ConfigMap
 metadata:
   name: aws-auth
